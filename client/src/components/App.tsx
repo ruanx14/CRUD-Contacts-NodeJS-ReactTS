@@ -1,20 +1,20 @@
 import { Nav } from "./Nav";
 import NewContact from "./NewContact";
 import ListContacts from "./ListContacts";
-import { useEffect,useState } from "react";
+import {useState } from "react";
 import Footer from "./Footer";
 
 function App() {
-  var [bodyContainer, setBodyContainer] = useState(true);
+  
+  var [bodyContainer, setBodyContainer] = useState(false);
 
-function MainBody() {
+  function MainBody() {
   if (bodyContainer) {
     return <NewContact />;
   }
-  return <ListContacts />;
-}
-
-   function showNewContact(){
+    return <ListContacts />;
+  }
+  function showNewContact(){
     setBodyContainer(true);
     MainBody();
   }

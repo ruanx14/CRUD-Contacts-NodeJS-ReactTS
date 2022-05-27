@@ -20,8 +20,8 @@ app.post('/api/user/add', async function(req,res){
 app.get('/api/get', async function(req,res){
     try {
         await client.connect();
-        const database = client.db("contatos");
-        const collection = database.collection("contato");
+        const database = client.db("contacts_react");
+        const collection = database.collection("contact");
         const result = await collection.find().toArray();
         res.send(result);
         /* collection.find().toArray((err,result) => {
@@ -40,20 +40,22 @@ app.delete('/api/get', async function(req,res){
 app.post('/api/get', async function(req,res){
     try {
         await client.connect();
-        const database = client.db("contatos");
-        const collection = database.collection("contato");
+        const database = client.db("contacts_react");
+        const collection = database.collection("contact");
 
         const doc = {
-          nome: "RandonName",
-          sobrenome: "randomSobrename",
+          name: req.body.name,
+          lastName: req.body.lastName,
+          number: req.body.number,
+          email: req.body.email,
         }
 
         const result = await collection.insertOne(doc);
         console.log(`Foi inserido, com o id: ${result.insertedId}`);
-      } finally {
-        await client.close();
-      }
+      } catch(e){
+        console.log(e.message);
+    }
 });
 
 
-app.listen(3001);
+app.listen(3001); 
