@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import Axios from 'axios';
 import { useEffect,useState } from 'react';
 import ContextMenu from './ContextMenu';
+import EditContainer from './EditContainer';
 
 const ListUnOrder = styled.ul`
     font-size: 1em;
@@ -32,30 +33,54 @@ const SpanInfo = styled.span`
     display: flex;
     justify-content: center;
 `;
-export default function ListContacts(){    
-const [contactList, setContactList] = useState([]);
-const localWeb = 'http://localhost:3001/';
+    export default function ListContacts(){    
 
-const getContacts = () => {
-    Axios.get(localWeb+'api/get').then((res) => {
-        setContactList(res.data);
-    });
-}
-const [dropDown, setDropDown] = useState(false);
-const [topPosition, setTopPosition] = useState(0);
-const [leftPosition, setLeftPosition] = useState(0);
+    const [contactList, setContactList] = useState([]);
+    const localWeb = 'http://localhost:3001/';
 
-function changeValues(e){
-    e.preventDefault();
-    setTopPosition(e.pageY);
-    setLeftPosition(e.pageX);
-    setDropDown(true);
-}
-/* document.onclick = function(){
-    setDropDown(false);
-} */
-useEffect(getContacts,[]);
+    const getContacts = () => {
+        Axios.get(localWeb+'api/get').then((res) => {
+            setContactList(res.data);
+        });
+    }
+    const [dropDown, setDropDown] = useState('none');
+    const [topPosition, setTopPosition] = useState(0);
+    const [leftPosition, setLeftPosition] = useState(0);
+    const [displayShow,setDisplayShow] = useState('none');
+    const [objectClicado,setObjectClicado] = useState('');
+    
+    useEffect(getContacts,[]);
 
+    function changeValues(e){
+        e.preventDefault();
+        setObjectClicado(e.target.id)
+        setTopPosition(e.pageY);
+        setLeftPosition(e.pageX);
+        setDropDown('block');
+        document.body.addEventListener("click", closeDropdown);
+    }
+    const closeDropdown = (event) => {
+        if(event.target!=document.getElementById('contextMenuId')){
+            setDropDown('none');
+        }
+        document.body.removeEventListener("click", closeDropdown);
+    };
+
+    function showEdit(){
+        setDisplayShow('flex');
+        document.body.addEventListener("click", closeEdit);
+     }
+    const closeEdit = (event) => {
+        if(event.target==document.getElementById('modalId')){
+            setDisplayShow('none');
+        }
+    };
+    function deleteObject(){
+         Axios.delete(localWeb+'api/get', {data:{objectId: objectClicado}}).then((res) => {
+            console.log(res);
+        }); 
+        window.location.reload();
+    }
     return (
         <ListUnOrder>
              <ListItem key="keyPrimary">
@@ -76,26 +101,27 @@ useEffect(getContacts,[]);
                 </ListItem>   
             {
                 contactList.map((values) => {  
-                    return <ListItem  onContextMenu={(e) => changeValues(e)} key={values['_id']}>
+                    return <ListItem  id={values['_id']} onContextMenu={(e) => changeValues(e)} key={values['_id']}>
                     <DivInfo>
-                        <SpanInfo>
+                        <SpanInfo id={values['_id']}>
                             {values['name']}
                         </SpanInfo> 
-                        <SpanInfo>
+                        <SpanInfo id={values['_id']}>
                             {values['lastName']}
                         </SpanInfo>   
-                        <SpanInfo>
+                        <SpanInfo id={values['_id']}>
                             {values['email']}
                         </SpanInfo> 
-                        <SpanInfo>
+                        <SpanInfo id={values['_id']}>
                             {values['number']}
                         </SpanInfo>   
                     </DivInfo>
                 </ListItem>
                 })
             }
-
-        <ContextMenu top={topPosition}  left={leftPosition} controlContent={dropDown} />
+        
+        <EditContainer displayShow={displayShow} />
+        <ContextMenu top={topPosition}  left={leftPosition} displayYes={dropDown} showEditMenu={showEdit} deleteObject={deleteObject}/>
 
         </ListUnOrder>
     );

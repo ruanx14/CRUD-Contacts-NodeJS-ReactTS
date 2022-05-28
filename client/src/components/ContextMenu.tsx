@@ -1,13 +1,7 @@
-import { useState } from "react";
 import styled from "styled-components";
-import EditContainer from "./EditContainer";
 
-const DivBody = styled.div`
-    width: 100%;
-    height: 400px;
-    background-color: lightgreen;
-`
 const DivContent = styled.div`
+    display: ${props => props.displayYes };
     position: absolute;    
     left: ${props => props.left + "px"};
     top: ${props => props.top + "px"};
@@ -34,41 +28,19 @@ const LiContent = styled.li`
         background-color: rgba(138, 241, 242, 0.8);
     }
 `    
-    function  DivContentController(props:any){
-        const [verify,setVerify] = useState(false);
+// 
 
-        function teste(){
-            console.log("editar");
-            return(
-                <EditContainer />
-            );
-        }
-        
-        function teste2(){
-            console.log("deletar");
-        
-        }
-        if(props.controlContent){
-            return (
-                /* <EditContainer /> */
-                 <DivContent top={props.top} left={props.left}>
-                    <UlContent>
-                        <LiContent onClick={teste}>
-                            Editar
-                        </LiContent>
-                        <LiContent onClick={teste2}>
-                            Deletar
-                        </LiContent>
-                    </UlContent>
-                </DivContent> 
-            );   
-        }
-        
-    }
-
-       
     export default function ContextMenu(props){
         return(
-            <DivContentController top={props.top}  left={props.left} controlContent={props.controlContent} /> 
+            <DivContent id='contextMenuId' top={props.top} left={props.left} displayYes={props.displayYes} >
+                <UlContent>
+                    <LiContent onClick={props.showEditMenu}>
+                        Editar
+                    </LiContent>
+                    <LiContent onClick={props.deleteObject}>
+                        Deletar
+                    </LiContent>
+            </UlContent>
+        </DivContent> 
         );
     }

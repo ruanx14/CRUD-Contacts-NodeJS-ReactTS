@@ -2,6 +2,7 @@ const { MongoClient } = require('mongodb');
 const cors = require('cors')
 express = require('express');
 app = express();
+var ObjectId = require('mongodb').ObjectId;
 
 app.use(cors());
 app.use(express.json());
@@ -30,13 +31,24 @@ app.get('/api/get', async function(req,res){
       }catch(e){
           console.log(e.message);
       }
-})
+});
 app.put('/api/get', async function(req,res){
  /*    res.send('Hello World_put'); */
-})
+});
 app.delete('/api/get', async function(req,res){
-   /*  res.send('Hello World_delete'); */
-})
+  try{
+    await client.connect();
+    const database = client.db("contacts_react");
+    const collection = database.collection("contact");
+    doc = {
+      _id : ObjectId(req.body.objectId)
+    }
+    const result = await collection.deleteOne(doc);
+    console.log(result);
+  }catch(e){
+     console.log(e.message); 
+  }
+});
 app.post('/api/get', async function(req,res){
     try {
         await client.connect();
