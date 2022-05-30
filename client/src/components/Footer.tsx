@@ -46,7 +46,7 @@ export default function Footer(){
           <DivInfo><a href="https://www.github.com/ruanx14">Github</a></DivInfo>
           <DivInfo><a href="https://www.linkedin.com/in/ruanbarroso7">Linkedin</a></DivInfo>
           <DivInfo><a href="https://www.instagram.com/ruanbarroso7">Instagram</a></DivInfo>
-          <DivInfo><a href="#">Repository of this project</a></DivInfo>
+          <DivInfo><a href="https://github.com/ruanx14/CRUD-NodeJS-ReactTS">Repository of this project</a></DivInfo>
         </DivLinks>
       </FooterMain>
     );
