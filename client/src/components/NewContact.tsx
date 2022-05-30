@@ -1,10 +1,10 @@
 import styled from 'styled-components';
-import {useEffect, useState} from "react";
+import { useState } from "react";
 import Axios from "axios";
 
 const FormContact = styled.div`
-    height: 600px;
-    width: 90%;
+    height: 500px;
+    width: 95%;
     margin: 20px auto;
     font-family: sans-serif;
 `
@@ -25,6 +25,7 @@ const Button = styled.button`
     color: black;
     border: none;
     font-size: 1.2em;
+    box-shadow: 5px 5px 10px 1px grey;
     &&:hover{
         cursor: pointer;
         background-color: rgba(58, 154, 143, 0.71);
@@ -54,59 +55,103 @@ const LabelInputs = styled.label`
     font-weight: bold;
     text-indent: 2em;
 `
-
-export default function NewContact(){
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [number, setNumber] = useState('');
-    const [lastName, setLastName] = useState('');
-
+    export default function NewContact(props){
+    //const [example, setExample] = useState();
+    
+    if(Object.keys(props.objectValues).length>1){
+        //const and let doesn't work!
+        var [idObject, setIdObject] = useState(props.objectValues._id);
+        var [name, setName] = useState(props.objectValues.name);
+        var [email, setEmail] = useState(props.objectValues.email);
+        var [number, setNumber] = useState(props.objectValues.number);
+        var [lastName, setLastName] = useState(props.objectValues.lastName);
+    }else{
+        var [name, setName] = useState('');
+        var [email, setEmail] = useState('');
+        var [number, setNumber] = useState('');
+        var [lastName, setLastName] = useState('');
+    }
+    var [error, setError] = useState('');
     const localWeb = 'http://localhost:3001/'
 
     const saveContact = () => {
-        Axios.post(localWeb+'api/get', {name: name, email: email,number: number, lastName: lastName});
+       /*  Axios.post(localWeb+'api/get', {name: name, email: email, number: number, lastName: lastName}).then((res) => {
+            console.log(res.response.data);
+            setError(res.data.erro);
+        }); */
+
+        Axios.post(localWeb+'api/get', {name: name, email: email, number: number, lastName: lastName})
+        .then((res) => {
+            if(res.data.done==true){
+                window.location.reload();
+            }
+        })
+        .catch((err) => {
+            setError(err.response.data.erro);
+        });
+    }
+    const editContact = () => {
+        Axios.put(localWeb+'api/get', {name: name, email: email,number: number, lastName: lastName, idObject: idObject});
         window.location.reload();
     }
+    
     return (
         <FormContact>
+             <DivInputs>
+                <LabelInputs style={{
+                    backgroundColor: 'rgba(255, 51, 51, 0.53)',
+                    marginBottom: '15px'
+                }}>{error}</LabelInputs>
+            </DivInputs>
             <DivInputs>
                 <LabelInputs>Nome</LabelInputs>
-                <InputText placeholder="Escreva o nome do contato aqui" name="name" onChange={(e) => {
+                <InputText placeholder={"Escreva o nome do contato aqui"} defaultValue={name} name="name" onChange={(e) => {
         setName(e.target.value);
       }}></InputText>
             </DivInputs>
             
             <DivInputs>
                 <LabelInputs>Sobrenome</LabelInputs>
-                <InputText placeholder="Escreva o sobrenome do contato aqui" name="lastName" onChange={(e) => {
+                <InputText placeholder="Escreva o sobrenome do contato aqui" value={lastName} name="lastName" onChange={(e) => {
         setLastName(e.target.value);
       }}></InputText>
             </DivInputs>
             
             <DivInputs>
                 <LabelInputs>Email</LabelInputs>
-                <InputText placeholder="Escreva o email do contato aqui" name="email" onChange={(e) => {
+                <InputText placeholder="Escreva o email do contato aqui" value={email} name="email" onChange={(e) => {
         setEmail(e.target.value);
       }}></InputText>
             </DivInputs>
             
             <DivInputs>
                 <LabelInputs>Numero</LabelInputs>
-                <InputText placeholder="Escreva o numero do contato aqui" name="number" onChange={(e) => {
+                <InputText placeholder="Escreva o numero do contato aqui" value={number} name="number" onChange={(e) => {
         setNumber(e.target.value);
       }}></InputText>
             </DivInputs>
-
-           {/*  <DivNovoCampo>
-                <LabelInputs>Nome do campo:</LabelInputs>
-                <InputText placeholder="Escreva qual tipo de informação estará salvando?"></InputText>
-                <LabelInputs>Valor do campo:</LabelInputs>
-                <InputText placeholder="Escreva a informação aqui"></InputText>
-                </DivNovoCampo> */}
-
+{/* 
+           {  
+                example ?   (
+                    <DivNovoCampo>
+                        <LabelInputs>Nome do campo:</LabelInputs>
+                        <InputText placeholder="Escreva qual tipo de informação estará salvando?"></InputText>
+                        <LabelInputs>Valor do campo:</LabelInputs>
+                        <InputText placeholder="Escreva a informação aqui"></InputText>
+                    </DivNovoCampo> 
+                ) : ''
+            }
+ */}
             <DivButtons>
-               {/*  <Button onClick={showSomething} >Adicionar Novo Campo</Button> */}
-                <Button onClick={saveContact}>Salvar Contato</Button>
+              {/*   {
+                    example ? (
+                        <Button> Adicionar Novo Campo</Button>
+                    ) : ''
+                } */}
+                {
+                    Object.keys(props.objectValues).length>1 ? <Button onClick={editContact}>Salvar Alterações</Button> : <Button onClick={saveContact}>Salvar novo Contato</Button>
+                }
+               
             </DivButtons>
             
         </FormContact>

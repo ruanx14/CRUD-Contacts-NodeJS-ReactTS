@@ -4,11 +4,13 @@ import { useEffect,useState } from 'react';
 import ContextMenu from './ContextMenu';
 import EditContainer from './EditContainer';
 
+
 const ListUnOrder = styled.ul`
-    font-size: 1em;
-    margin: 1em;
-    border-radius: 3px;
+    display: block;
     width: 90%;
+    margin: 10px auto;
+    padding: 0;
+    border-radius: 3px;
     font-family: arial;
 `;
 
@@ -36,6 +38,7 @@ const SpanInfo = styled.span`
     export default function ListContacts(){    
 
     const [contactList, setContactList] = useState([]);
+    const [contactClick, setContactClick] = useState([]);
     const localWeb = 'http://localhost:3001/';
 
     const getContacts = () => {
@@ -46,12 +49,12 @@ const SpanInfo = styled.span`
     const [dropDown, setDropDown] = useState('none');
     const [topPosition, setTopPosition] = useState(0);
     const [leftPosition, setLeftPosition] = useState(0);
-    const [displayShow,setDisplayShow] = useState('none');
     const [objectClicado,setObjectClicado] = useState('');
-    
+
     useEffect(getContacts,[]);
 
-    function changeValues(e){
+    function changeValues(e:any,obj:any){
+        setContactClick(obj);
         e.preventDefault();
         setObjectClicado(e.target.id)
         setTopPosition(e.pageY);
@@ -59,25 +62,28 @@ const SpanInfo = styled.span`
         setDropDown('block');
         document.body.addEventListener("click", closeDropdown);
     }
-    const closeDropdown = (event) => {
+    const closeDropdown = (event:any) => {
         if(event.target!=document.getElementById('contextMenuId')){
             setDropDown('none');
         }
         document.body.removeEventListener("click", closeDropdown);
     };
+    
+    const [controlModal, setControlModal] = useState(false);
 
     function showEdit(){
-        setDisplayShow('flex');
+        setControlModal(true);
         document.body.addEventListener("click", closeEdit);
      }
-    const closeEdit = (event) => {
+    const closeEdit = (event:any) => {
         if(event.target==document.getElementById('modalId')){
-            setDisplayShow('none');
+            setControlModal(false);
         }
-    };
+    }; 
+    
     function deleteObject(){
          Axios.delete(localWeb+'api/get', {data:{objectId: objectClicado}}).then((res) => {
-            console.log(res);
+            //console.log(res);
         }); 
         window.location.reload();
     }
@@ -101,7 +107,7 @@ const SpanInfo = styled.span`
                 </ListItem>   
             {
                 contactList.map((values) => {  
-                    return <ListItem  id={values['_id']} onContextMenu={(e) => changeValues(e)} key={values['_id']}>
+                    return <ListItem  id={values['_id']} onContextMenu={(e) => changeValues(e,values)} key={values['_id']}>
                     <DivInfo>
                         <SpanInfo id={values['_id']}>
                             {values['name']}
@@ -119,9 +125,11 @@ const SpanInfo = styled.span`
                 </ListItem>
                 })
             }
-        
-        <EditContainer displayShow={displayShow} />
-        <ContextMenu top={topPosition}  left={leftPosition} displayYes={dropDown} showEditMenu={showEdit} deleteObject={deleteObject}/>
+
+        {controlModal ?  <EditContainer objectValues={contactClick} /> : '' }
+       
+
+        <ContextMenu top={topPosition}  left={leftPosition} displayYes={dropDown} deleteObject={deleteObject} showEdit={showEdit} />
 
         </ListUnOrder>
     );

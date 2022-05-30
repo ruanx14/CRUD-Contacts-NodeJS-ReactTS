@@ -1,5 +1,4 @@
 import styled from "styled-components";
-
 const DivContent = styled.div`
     display: ${props => props.displayYes };
     position: absolute;    
@@ -7,7 +6,7 @@ const DivContent = styled.div`
     top: ${props => props.top + "px"};
     width: 100px;
     height: 100px;
-
+    z-index: 1;
 `
 const UlContent = styled.ul`
     width:  100px;
@@ -29,12 +28,12 @@ const LiContent = styled.li`
     }
 `    
 // 
-
-    export default function ContextMenu(props){
+    
+    export default function ContextMenu(props:any){
         return(
             <DivContent id='contextMenuId' top={props.top} left={props.left} displayYes={props.displayYes} >
                 <UlContent>
-                    <LiContent onClick={props.showEditMenu}>
+                    <LiContent onClick={props.showEdit}>
                         Editar
                     </LiContent>
                     <LiContent onClick={props.deleteObject}>

@@ -10,7 +10,7 @@ function App() {
 
   function MainBody() {
   if (bodyContainer) {
-    return <NewContact />;
+    return <NewContact objectValues={[]} />;
   }
     return <ListContacts />;
   }

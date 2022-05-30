@@ -43,9 +43,9 @@ export default function Footer(){
           Ruan Barroso
         </DivName>
         <DivLinks>
-          <DivInfo><a href="#">Github</a></DivInfo>
-          <DivInfo><a href="#">Linkedin</a></DivInfo>
-          <DivInfo><a href="#">Instagram</a></DivInfo>
+          <DivInfo><a href="https://www.github.com/ruanx14">Github</a></DivInfo>
+          <DivInfo><a href="https://www.linkedin.com/in/ruanbarroso7">Linkedin</a></DivInfo>
+          <DivInfo><a href="https://www.instagram.com/ruanbarroso7">Instagram</a></DivInfo>
           <DivInfo><a href="#">Repository of this project</a></DivInfo>
         </DivLinks>
       </FooterMain>
