@@ -7,7 +7,7 @@ var ObjectId = require('mongodb').ObjectId;
 app.use(cors());
 app.use(express.json());
 //your URI to connect MONGODB
-const uri = "mongodb+srv://ruanbarroso7:root123@contactsreact.mgzxo.mongodb.net/?retryWrites=true&w=majority";
+const uri = "ur uri here";
 //database=contacts_react 
 //collection=contact
 const client = new MongoClient(uri);
