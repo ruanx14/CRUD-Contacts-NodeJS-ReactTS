@@ -6,16 +6,11 @@ var ObjectId = require('mongodb').ObjectId;
 
 app.use(cors());
 app.use(express.json());
-const uri = "mongodb://localhost:27017";
+//your URI to connect MONGODB
+const uri = "mongodb+srv://ruanbarroso7:root123@contactsreact.mgzxo.mongodb.net/?retryWrites=true&w=majority";
+//database=contacts_react 
+//collection=contact
 const client = new MongoClient(uri);
-
-//User
-app.get('/api/user/get', async function(req,res){
-
-})
-app.post('/api/user/add', async function(req,res){
-      
-});
 
 //contacts
 
